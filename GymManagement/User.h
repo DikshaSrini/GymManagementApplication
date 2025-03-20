@@ -1,12 +1,18 @@
 #ifndef USER_H
 #define USER_H
-#include <string>
+
+#include <iostream>
+#include <unordered_map>
+
+enum Role { NONE, ADMIN, TRAINER, MEMBER };
+
 class User {
 private:
-    std::string username;
-    std::string password;
+    static std::string loggedInUsername;  // Store logged-in user's name
+
 public:
-    User(std::string uname, std::string pass);
-    bool authenticate(std::string uname, std::string pass);
+    static Role login();  // Static function for authentication
+    static std::string getUsername();  // Returns the logged-in username
 };
+
 #endif

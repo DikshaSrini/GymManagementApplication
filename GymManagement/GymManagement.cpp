@@ -1,84 +1,80 @@
 #include <iostream>
 #include "User.h"
+#include "Member.h"
 #include "Trainer.h"
 #include "BMI.h"
-#include "Workout.h"
-#include "Diet.h"
-#include "Class.h"
-#include "Payment.h"
-#include "Progress.h"
-#include "Notification.h"
+
+void memberMenu(std::string username);
+void trainerMenu(std::string username);
+void adminMenu();
 
 int main() {
-    // User authentication
-    User user("Diksha", "diksha");
-    std::string username, password;
-    std::cout << "Enter username: ";
-    std::cin >> username;
-    std::cout << "Enter password: ";
-    std::cin >> password;
+    Role userRole = User::login();  // ? Call static login()
 
-    if (user.authenticate(username, password)) {
-        std::cout << "Login successful!\n";
-    }
-    else {
-        std::cout << "Invalid credentials!\n";
-        return 1;
-    }
-
-    // Trainer details
-    Trainer trainer("Alice", "Strength Training");
-    std::cout << "Trainer Specialty: " << trainer.getSpecialty() << "\n";
-
-    // BMI calculation
-    double weight, height;
-    std::cout << "Enter weight (kg): ";
-    std::cin >> weight;
-    std::cout << "Enter height (m): ";
-    std::cin >> height;
-    std::cout << "Your BMI: " << BMI::computeBMI(weight, height) << "\n";
-
-    // Workout plan
-    int level;
-    std::cout << "Enter workout level (1 for beginner, 2 for advanced): ";
-    std::cin >> level;
-    std::cout << "Workout Plan: " << Workout::getWorkoutPlan(level) << "\n";
-
-    // Diet suggestion
-    int calories;
-    std::cout << "Enter daily calorie intake: ";
-    std::cin >> calories;
-    std::cout << "Diet Suggestion: " << Diet::suggestDiet(calories) << "\n";
-
-    // Class scheduling
-    std::string date;
-    std::cout << "Enter class date (YYYY-MM-DD): ";
-    std::cin >> date;
-    std::cout << Class::scheduleClass(date) << "\n";
-
-    // Payment processing
-    double amount;
-    std::cout << "Enter payment amount: ";
-    std::cin >> amount;
-    if (Payment::processPayment(amount)) {
-        std::cout << "Payment successful!\n";
-    }
-    else {
-        std::cout << "Payment failed!\n";
-    }
-
-    // Progress tracking
-    int weeks;
-    std::cout << "Enter number of weeks for progress tracking: ";
-    std::cin >> weeks;
-    std::cout << Progress::trackProgress(weeks) << "\n";
-
-    // Sending notification
-    std::string message;
-    std::cout << "Enter reminder message: ";
-    std::cin.ignore();
-    std::getline(std::cin, message);
-    std::cout << Notification::sendReminder(message) << "\n";
+    if (userRole == ADMIN) adminMenu();
+    else if (userRole == TRAINER) trainerMenu(User::getUsername());  // ? Use User::getUsername()
+    else if (userRole == MEMBER) memberMenu(User::getUsername());    // ? Use User::getUsername()
+    else std::cout << "Exiting...\n";
 
     return 0;
+}
+
+void memberMenu(std::string username) {
+    Member member(username, 22, "Gold");
+    int choice;
+    do {
+        std::cout << "\nMember Menu:\n1. View Profile\n2. Update Profile\n3. Calculate BMI\n4. Exit\nChoice: ";
+        std::cin >> choice;
+
+        if (choice == 1) member.viewDetails();
+        else if (choice == 2) member.updateProfile();
+        else if (choice == 3) {
+            double weight, height;
+            std::cout << "Enter weight (kg): "; std::cin >> weight;
+            std::cout << "Enter height (m): "; std::cin >> height;
+
+            double bmi = BMI::computeBMI(weight, height);
+            std::cout << "Your BMI: " << bmi << "\nCategory: " << BMI::categorizeBMI(bmi)
+                << "\nHealth Tip: " << BMI::getHealthTips(bmi) << "\n";
+        }
+    } while (choice != 4);
+}
+
+void trainerMenu(std::string username) {
+    Trainer trainer(username, "Strength Training");
+    int choice;
+    do {
+        std::cout << "\nTrainer Menu:\n1. Assign Workout Plan\n2. Schedule Class\n3. Exit\nChoice: ";
+        std::cin >> choice;
+
+        if (choice == 1) trainer.assignWorkoutPlan();
+        else if (choice == 2) trainer.scheduleClass();
+    } while (choice != 3);
+}
+
+void adminMenu() {
+    int choice;
+    do {
+        std::cout << "\nAdmin Menu:\n1. Add Member\n2. Remove Trainer\n3. View Stats\n4. Exit\nChoice: ";
+        std::cin >> choice;
+
+        if (choice == 1) {
+            std::string name, membership;
+            int age;
+            std::cout << "Enter Member Name: "; std::cin >> name;
+            std::cout << "Enter Age: "; std::cin >> age;
+            std::cout << "Enter Membership Type (Gold/Silver/Bronze): "; std::cin >> membership;
+            Member newMember(name, age, membership);
+            std::cout << "New Member Added!\n";
+        }
+        else if (choice == 2) {
+            std::string trainerName;
+            std::cout << "Enter Trainer Name to Remove: "; std::cin >> trainerName;
+            std::cout << "Trainer " << trainerName << " has been removed.\n";
+        }
+        else if (choice == 3) {
+            std::cout << "Displaying Gym Statistics...\n";
+            // Implement detailed stats display
+        }
+    } while (choice != 4);
 }

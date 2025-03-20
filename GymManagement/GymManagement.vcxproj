@@ -131,6 +131,7 @@
     <ClCompile Include="Class.cpp" />
     <ClCompile Include="Diet.cpp" />
     <ClCompile Include="GymManagement.cpp" />
+    <ClCompile Include="Member.cpp" />
     <ClCompile Include="Notification.cpp" />
     <ClCompile Include="Payment.cpp" />
     <ClCompile Include="Progress.cpp" />
@@ -142,6 +143,7 @@
     <ClInclude Include="BMI.h" />
     <ClInclude Include="Class.h" />
     <ClInclude Include="Diet.h" />
+    <ClInclude Include="Member.h" />
     <ClInclude Include="Notification.h" />
     <ClInclude Include="Payment.h" />
     <ClInclude Include="Progress.h" />
