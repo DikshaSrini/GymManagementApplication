@@ -1,6 +1,5 @@
 #include "User.h"
 
-// Initialize static variable
 std::string User::loggedInUsername = "";
 
 std::unordered_map<std::string, std::pair<std::string, Role>> users = {
@@ -14,15 +13,15 @@ Role User::login() {
     std::cout << "Enter Username: ";
     std::cin >> usernameInput;
     std::cout << "Enter Password: ";
-    std::cin >> passwordInput;
+    std::cin >> passwordInput;  
 
     if (users.count(usernameInput) && users[usernameInput].first == passwordInput) {
-        std::cout << "? Login Successful!\n";
-        loggedInUsername = usernameInput;  // Store logged-in username
+        std::cout << "Login Successful!\n";
+        loggedInUsername = usernameInput;
         return users[usernameInput].second;
     }
     else {
-        std::cout << "? Invalid Credentials!\n";
+        std::cout << "Invalid Credentials!\n";
         return NONE;
     }
 }

@@ -1,41 +1,74 @@
 #include "Trainer.h"
-#include <string>
+#include "string"
 
-Trainer::Trainer(std::string n, std::string s) : name(n), specialty(s) {}
+// Create an unordered map to store trainers with their names as keys
+std::unordered_map<std::string, Trainer> trainers;
 
-std::string Trainer::getSpecialty() { return specialty; }
-
-void Trainer::assignWorkoutPlan() {
-    std::string memberName, workout;
-    std::cout << "Enter Member Name: ";
-    std::cin >> memberName;
-    std::cout << "Enter Workout Plan for " << memberName << ": ";
-    std::cin.ignore();
-    std::getline(std::cin, workout);
-
-    memberWorkouts[memberName].push_back(workout);
-    std::cout << "Workout Plan Assigned to " << memberName << " successfully!\n";
+// Constructor for the Trainer class
+Trainer::Trainer(std::string name, std::string specialization)
+    : name(name), specialization(specialization) {
 }
 
+// Function to view trainer details
+void Trainer::viewDetails() {
+    std::cout << "Trainer: " << name << " | Specialization: " << specialization << "\n";
+}
+
+// Function to update trainer details
+void Trainer::updateDetails() {
+    std::cout << "Enter new specialization: ";
+    std::cin.ignore();
+    std::getline(std::cin, specialization);
+    std::cout << "Trainer details updated!\n";
+}
+
+// Function to add a new trainer
+void Trainer::addTrainer() {
+    std::string name, specialization;
+    std::cout << "Enter Trainer Name: ";
+    std::cin >> name;
+    std::cout << "Enter Specialization: ";
+    std::cin.ignore();
+    std::getline(std::cin, specialization);
+
+    // Add the new trainer to the map
+    trainers[name] = Trainer(name, specialization);
+    std::cout << "Trainer " << name << " added successfully!\n";
+}
+
+// Function to remove a trainer
+void Trainer::removeTrainer() {
+    std::string name;
+    std::cout << "Enter Trainer Name to remove: ";
+    std::cin >> name;
+
+    // Remove the trainer from the map if found
+    if (trainers.erase(name))
+        std::cout << "Trainer " << name << " removed successfully!\n";
+    else
+        std::cout << "Trainer not found!\n";
+}
+
+// Function to assign a trainer to a member
+void Trainer::assignTrainerToMember(std::string memberName) {
+    std::string trainerName;
+    std::cout << "Enter Trainer Name to assign to " << memberName << ": ";
+    std::cin >> trainerName;
+
+    // Check if the trainer exists in the map
+    if (trainers.count(trainerName))
+        std::cout << "Trainer " << trainerName << " assigned to Member " << memberName << "!\n";
+    else
+        std::cout << "Trainer not found!\n";
+}
+
+// Function to schedule a class
 void Trainer::scheduleClass() {
-    std::string date, time, topic;
-    std::cout << "Enter Class Date (YYYY-MM-DD): ";
+    std::string date, time;
+    std::cout << "Enter class date (YYYY-MM-DD): ";
     std::cin >> date;
-    std::cout << "Enter Class Time (HH:MM): ";
+    std::cout << "Enter class time (HH:MM): ";
     std::cin >> time;
-    std::cout << "Enter Class Topic: ";
-    std::cin.ignore();
-    std::getline(std::cin, topic);
 
-    std::cout << "Class on '" << topic << "' scheduled on " << date << " at " << time << ".\n";
-}
-
-void Trainer::viewAssignedWorkouts() {
-    std::cout << "Workout Plans Assigned:\n";
-    for (const auto& entry : memberWorkouts) {
-        std::cout << "Member: " << entry.first << "\nWorkouts:\n";
-        for (const auto& workout : entry.second) {
-            std::cout << "- " << workout << "\n";
-        }
-    }
+    std::cout << "Class scheduled on " << date << " at " << time << " by Trainer " << name << ".\n";
 }

@@ -1,7 +1,12 @@
-#ifndef PAYMENT_H
-#define PAYMENT_H
+#pragma once
+
+#include <iostream>
+#include <unordered_map>
+
 class Payment {
 public:
-    static bool processPayment(double amount);
+    static void makePayment(std::string memberName);
+    static void viewPaymentStatus(std::string memberName);
 };
-#endif
+
+

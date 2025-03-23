@@ -1,8 +1,14 @@
-#ifndef WORKOUT_H
-#define WORKOUT_H
-#include <string>
+#pragma once
+
+#include <iostream>
+#include <unordered_map>
+#include <vector>
+
 class Workout {
 public:
-    static std::string getWorkoutPlan(int level);
+    static void assignWorkoutPlan(std::string memberName);
+    static void viewWorkoutPlan(std::string memberName);
 };
-#endif
+
+extern std::unordered_map<std::string, std::vector<std::string>> workoutPlans;
+

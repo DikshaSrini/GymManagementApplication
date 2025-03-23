@@ -1,23 +1,20 @@
-#ifndef TRAINER_H
-#define TRAINER_H
+#pragma once
 
 #include <iostream>
-#include <vector>
 #include <unordered_map>
 
 class Trainer {
-private:
-    std::string name;
-    std::string specialty;
-    std::unordered_map<std::string, std::vector<std::string>> memberWorkouts;  // Stores workout plans per member
-
+    std::string name, specialization;
 public:
-    Trainer(std::string n, std::string s);
+    Trainer() {} 
+    Trainer(std::string name, std::string specialization);
 
-    std::string getSpecialty();
-    void assignWorkoutPlan();
+    void viewDetails();
+    void updateDetails();
+    static void addTrainer();
+    static void removeTrainer();
+    static void assignTrainerToMember(std::string memberName);
     void scheduleClass();
-    void viewAssignedWorkouts();
 };
 
-#endif
+

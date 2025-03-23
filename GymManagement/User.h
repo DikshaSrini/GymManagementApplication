@@ -3,16 +3,16 @@
 
 #include <iostream>
 #include <unordered_map>
+#include <string>
 
 enum Role { NONE, ADMIN, TRAINER, MEMBER };
 
 class User {
 private:
-    static std::string loggedInUsername;  // Store logged-in user's name
-
+    static std::string loggedInUsername;
 public:
-    static Role login();  // Static function for authentication
-    static std::string getUsername();  // Returns the logged-in username
+    static Role login();
+    static std::string getUsername();
 };
 
 #endif

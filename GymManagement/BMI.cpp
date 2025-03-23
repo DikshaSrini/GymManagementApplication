@@ -10,7 +10,6 @@ public:
 #endif
 
 #include "BMI.h"
-#include <string>
 
 double BMI::computeBMI(double weight, double height) {
     if (weight <= 0 || height <= 0) return -1;
