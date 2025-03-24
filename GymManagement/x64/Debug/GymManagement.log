@@ -1,6 +1,4 @@
 ﻿  GymManagement.cpp
-  Payment.cpp
-  Trainer.cpp
-  Workout.cpp
+  User.cpp
   Generating Code...
   GymManagement.vcxproj -> C:\Users\dks\source\repos\GymManagement\x64\Debug\GymManagement.exe

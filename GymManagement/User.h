@@ -2,16 +2,20 @@
 #define USER_H
 
 #include <iostream>
-#include <unordered_map>
 #include <string>
+#include <unordered_map>
 
 enum Role { NONE, ADMIN, TRAINER, MEMBER };
 
 class User {
 private:
     static std::string loggedInUsername;
+
 public:
-    static Role login();
+    Role login();
+    void registerUser();
+    bool verifyCredentials(const std::string& username, const std::string& password);
+    Role getUserRole(const std::string& username);
     static std::string getUsername();
 };
 

@@ -1,4 +1,8 @@
 #include <iostream>
+#include <fstream>
+#include <sstream>
+#include <string>
+#include <unordered_map>
 #include "User.h"
 #include "Member.h"
 #include "Trainer.h"
@@ -9,10 +13,58 @@
 void memberMenu(std::string username);
 void trainerMenu(std::string username);
 void adminMenu();
+bool userExists(const std::string& username);
 
 int main() {
+    std::cout << "***** Welcome to Synergy *****\n\n";
+
+    std::string username;
+    std::cout << "Enter Username (or 'new' to register): ";
+    std::cin >> username;
+
     User user;
-    Role userRole = user.login();
+    Role userRole;
+
+    if (username == "new") {
+        // Call the registration function
+        user.registerUser();
+        // After registration, prompt for login
+        userRole = user.login();
+    }
+    else {
+        // Check if user exists
+        if (userExists(username)) {
+            std::cout << "Welcome back, " << username << "!\n";
+            // Set the username and prompt for password
+            std::cout << "Enter Password: ";
+            std::string password;
+            std::cin >> password;
+
+            // Verify credentials
+            if (user.verifyCredentials(username, password)) {
+                std::cout << "Login Successful!\n";
+                userRole = user.getUserRole(username);
+            }
+            else {
+                std::cout << "Invalid Credentials!\n";
+                userRole = NONE;
+            }
+        }
+        else {
+            std::cout << "Username not found. Would you like to register? (y/n): ";
+            char choice;
+            std::cin >> choice;
+
+            if (choice == 'y' || choice == 'Y') {
+                user.registerUser();
+                userRole = user.login();
+            }
+            else {
+                std::cout << "Exiting...\n";
+                return 0;
+            }
+        }
+    }
 
     if (userRole == ADMIN) adminMenu();
     else if (userRole == TRAINER) trainerMenu(user.getUsername());
@@ -22,6 +74,7 @@ int main() {
     return 0;
 }
 
+// The original menu functions remain unchanged
 void memberMenu(std::string username) {
     Member member(username, 22, "Gold");
     int choice;
@@ -92,4 +145,30 @@ void adminMenu() {
             std::cout << "Displaying Gym Statistics...\n";
         }
     } while (choice != 5);
+}
+
+// Helper function to check if a user exists in the CSV file
+bool userExists(const std::string& username) {
+    std::ifstream file("users.csv");
+    if (!file.is_open()) {
+        return false;
+    }
+
+    std::string line;
+    // Skip header
+    std::getline(file, line);
+
+    while (std::getline(file, line)) {
+        std::istringstream ss(line);
+        std::string user;
+        std::getline(ss, user, ',');
+
+        if (user == username) {
+            file.close();
+            return true;
+        }
+    }
+
+    file.close();
+    return false;
 }
