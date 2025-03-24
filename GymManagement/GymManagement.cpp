@@ -14,9 +14,10 @@ void memberMenu(std::string username);
 void trainerMenu(std::string username);
 void adminMenu();
 bool userExists(const std::string& username);
+std::string selectMembershipType();
 
 int main() {
-    std::cout << "***** Welcome to Synergy *****\n\n";
+    std::cout << "***** Welcome to SynerGym *****\n\n";
 
     std::string username;
     std::cout << "Enter Username (or 'new' to register): ";
@@ -26,21 +27,16 @@ int main() {
     Role userRole;
 
     if (username == "new") {
-        // Call the registration function
         user.registerUser();
-        // After registration, prompt for login
         userRole = user.login();
     }
     else {
-        // Check if user exists
         if (userExists(username)) {
             std::cout << "Welcome back, " << username << "!\n";
-            // Set the username and prompt for password
             std::cout << "Enter Password: ";
             std::string password;
             std::cin >> password;
 
-            // Verify credentials
             if (user.verifyCredentials(username, password)) {
                 std::cout << "Login Successful!\n";
                 userRole = user.getUserRole(username);
@@ -74,17 +70,33 @@ int main() {
     return 0;
 }
 
-// The original menu functions remain unchanged
+// Updated member menu function with membership type selection
 void memberMenu(std::string username) {
-    Member member(username, 22, "Gold");
+    // Create member object with full attributes
+    Member member(username, "password123", "MEMBER", username, 22, "Female", 1.65, 55.0, "Vegetarian", "Active", "Bronze");
+
     int choice;
     do {
-        std::cout << "\nMember Menu:\n1. View Profile\n2. Update Profile\n3. Calculate BMI\n4. View Workout Plan\n5. Make Payment\n6. View Payment Status\n7. Exit\nChoice: ";
+        std::cout << "\nMember Menu:\n";
+        std::cout << "1. Set/Change Membership Type\n";
+        std::cout << "2. View Profile\n";
+        std::cout << "3. Update Profile\n";
+        std::cout << "4. Calculate BMI\n";
+        std::cout << "5. View Workout Plan\n";
+        std::cout << "6. Make Payment\n";
+        std::cout << "7. View Payment Status\n";
+        std::cout << "8. Exit\n";
+        std::cout << "Choice: ";
         std::cin >> choice;
 
-        if (choice == 1) member.viewDetails();
-        else if (choice == 2) member.updateProfile();
-        else if (choice == 3) {
+        if (choice == 1) {
+            std::string newMembership = selectMembershipType();
+            member.setMembershipType(newMembership);
+            std::cout << "Membership type updated to " << newMembership << "!\n";
+        }
+        else if (choice == 2) member.viewDetails();
+        else if (choice == 3) member.updateProfile();
+        else if (choice == 4) {
             double weight, height;
             std::cout << "Enter weight (kg): "; std::cin >> weight;
             std::cout << "Enter height (m): "; std::cin >> height;
@@ -92,10 +104,36 @@ void memberMenu(std::string username) {
             std::cout << "Your BMI: " << bmi << "\nCategory: " << BMI::categorizeBMI(bmi)
                 << "\nHealth Tip: " << BMI::getHealthTips(bmi) << "\n";
         }
-        else if (choice == 4) Workout::viewWorkoutPlan(username);
-        else if (choice == 5) Payment::makePayment(username);
-        else if (choice == 6) Payment::viewPaymentStatus(username);
-    } while (choice != 7);
+        else if (choice == 5) Workout::viewWorkoutPlan(username);
+        else if (choice == 6) Payment::makePayment(username);
+        else if (choice == 7) Payment::viewPaymentStatus(username);
+    } while (choice != 8);
+}
+
+// Function to handle membership type selection
+std::string selectMembershipType() {
+    int choice;
+    std::string membershipType;
+
+    std::cout << "\nSelect Membership Type:\n";
+    std::cout << "1. Bronze (Basic access to gym facilities)\n";
+    std::cout << "2. Silver (Bronze + access to group classes)\n";
+    std::cout << "3. Gold (Silver + personal trainer sessions)\n";
+    std::cout << "4. Platinum (Gold + nutrition counseling and spa access)\n";
+    std::cout << "Enter your choice: ";
+    std::cin >> choice;
+
+    switch (choice) {
+    case 1: membershipType = "Bronze"; break;
+    case 2: membershipType = "Silver"; break;
+    case 3: membershipType = "Gold"; break;
+    case 4: membershipType = "Platinum"; break;
+    default:
+        std::cout << "Invalid choice! Setting to Bronze by default.\n";
+        membershipType = "Bronze";
+    }
+
+    return membershipType;
 }
 
 void trainerMenu(std::string username) {
@@ -126,8 +164,12 @@ void adminMenu() {
             int age;
             std::cout << "Enter Member Name: "; std::cin >> name;
             std::cout << "Enter Age: "; std::cin >> age;
-            std::cout << "Enter Membership Type (Gold/Silver/Bronze): "; std::cin >> membership;
-            Member newMember(name, age, membership);
+
+            std::cout << "Select membership type for new member:\n";
+            membership = selectMembershipType();
+
+            // Create new member with full attributes
+            Member newMember(name, "defaultPass", "MEMBER", name, age, "Unspecified", 0.0, 0.0, "None", "Sedentary", membership);
             std::cout << "New Member Added!\n";
         }
         else if (choice == 2) {
@@ -147,16 +189,12 @@ void adminMenu() {
     } while (choice != 5);
 }
 
-// Helper function to check if a user exists in the CSV file
 bool userExists(const std::string& username) {
     std::ifstream file("users.csv");
-    if (!file.is_open()) {
-        return false;
-    }
+    if (!file.is_open()) return false;
 
     std::string line;
-    // Skip header
-    std::getline(file, line);
+    std::getline(file, line); // Skip header
 
     while (std::getline(file, line)) {
         std::istringstream ss(line);
