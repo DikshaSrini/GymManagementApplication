@@ -16,6 +16,7 @@ void adminMenu();
 bool userExists(const std::string& username);
 std::string selectMembershipType();
 
+
 int main() {
     std::cout << "***** Welcome to SynerGym *****\n\n";
 
@@ -31,7 +32,33 @@ int main() {
         userRole = user.login();
     }
     else {
-        if (userExists(username)) {
+        if (username == "admin") {
+            std::cout << "Enter Password: ";
+            std::string password;
+            std::cin >> password;
+            if (password == "adminPass") {
+                std::cout << "Welcome back, Admin!\n";
+                userRole = ADMIN;
+            }
+            else {
+                std::cout << "Invalid Credentials!\n";
+                userRole = NONE;
+            }
+        }
+        else if (username == "trainer") {
+            std::cout << "Enter Password: ";
+            std::string password;
+            std::cin >> password;
+            if (password == "trainerPass") {
+                std::cout << "Welcome back, Trainer!\n";
+                userRole = TRAINER;
+            }
+            else {
+                std::cout << "Invalid Credentials!\n";
+                userRole = NONE;
+            }
+        }
+        else if (userExists(username)) {
             std::cout << "Welcome back, " << username << "!\n";
             std::cout << "Enter Password: ";
             std::string password;
@@ -61,6 +88,8 @@ int main() {
             }
         }
     }
+
+    std::cout << "User Role: " << userRole << "\n"; // Debugging statement
 
     if (userRole == ADMIN) adminMenu();
     else if (userRole == TRAINER) trainerMenu(user.getUsername());

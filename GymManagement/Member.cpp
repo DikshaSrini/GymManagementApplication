@@ -194,7 +194,7 @@ void Member::viewDetails() {
 
     std::cout << "\n===== MEMBER DETAILS =====" << std::endl;
     std::cout << "Username: " << username << std::endl;
-    std::cout << "Password: " << password << std::endl; // Plaintext
+    std::cout << "Password: " << password << std::endl; 
     std::cout << "Role: " << role << std::endl;
     std::cout << "Name: " << name << std::endl;
     std::cout << "Age: " << age << std::endl;
