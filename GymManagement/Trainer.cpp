@@ -4,6 +4,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include "FileHandler.h"
 
 // Create an unordered map to store trainers with their names as keys
 std::unordered_map<std::string, Trainer> trainers;
@@ -103,4 +104,25 @@ void Trainer::viewMemberProgress(const std::string& memberUsername) const {
 
     inFile.close();
 
+}
+
+void Trainer::sendNotification() {
+    std::string memberUsername, message;
+
+    std::cout << "Enter member username: ";
+    std::cin >> memberUsername;  // Use `cin` instead of `getline`
+    std::cin.ignore(); // Ignore leftover newline
+
+    std::cout << "Enter notification message: ";
+    std::getline(std::cin, message);
+
+    if (memberUsername.empty() || message.empty()) {
+        std::cout << "Error: Member username or message cannot be empty.\n";
+        return;
+    }
+
+    // Save the notification in "notifications.csv"
+    std::vector<std::string> row = { memberUsername, message };
+    FileHandler::appendCSV("notifications.csv", row);
+    std::cout << "Notification sent to " << memberUsername << "!\n";
 }

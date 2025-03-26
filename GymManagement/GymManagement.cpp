@@ -230,7 +230,7 @@ void trainerMenu(std::string username) {
     Trainer trainer(username, "Strength Training");
     int choice;
     do {
-        std::cout << "\nTrainer Menu:\n1. Assign Workout Plan\n2. Schedule Class\n3. Exit\nChoice: ";
+        std::cout << "\nTrainer Menu:\n1. Assign Workout Plan\n2. Schedule Class\n3. Send Notifications\n4. Exit\nChoice: ";
         std::cin >> choice;
 
         if (choice == 1) {
@@ -241,7 +241,8 @@ void trainerMenu(std::string username) {
             std::cout << "Workout plan assigned to " << memberName << " successfully!\n";
         }
         else if (choice == 2) trainer.scheduleClass();
-    } while (choice != 3);
+        else if (choice == 3) trainer.sendNotification();
+    } while (choice != 4);
 }
 
 void adminMenu(std::vector<Member>& members) {
@@ -249,29 +250,50 @@ void adminMenu(std::vector<Member>& members) {
     do {
         std::cout << "\nAdmin Menu:\n1. Add Member\n2. View Stats\n3. Exit\nChoice: ";
         std::cin >> choice;
+        std::cin.ignore();  // Ignore leftover newline
 
         if (choice == 1) {
-            std::string name, membership;
-            int age;
+            std::string username, name, gender, dietPreference, activityLevel, membership;
+            int age, yearsOfExperience;
             double height, weight;
 
-            std::cout << "Enter Member Name: "; std::cin >> name;
+            std::cout << "Enter Member Username: "; std::getline(std::cin, username);
+            std::cout << "Enter Name: "; std::getline(std::cin, name);
             std::cout << "Enter Age: "; std::cin >> age;
+            std::cout << "Enter Gender: "; std::cin.ignore(); std::getline(std::cin, gender);
             std::cout << "Enter Height (m): "; std::cin >> height;
             std::cout << "Enter Weight (kg): "; std::cin >> weight;
+            std::cout << "Enter Diet Preference: "; std::cin.ignore(); std::getline(std::cin, dietPreference);
+            std::cout << "Enter Activity Level: "; std::getline(std::cin, activityLevel);
 
             std::cout << "Select membership type for new member:\n";
             membership = selectMembershipType();
 
-            Member newMember(name, "defaultPass", "MEMBER", name, age, "Unspecified", height, weight, "None", "Sedentary", membership);
+            // Create a new member object
+            Member newMember(username, "defaultPass", "MEMBER", name, age, gender, height, weight, dietPreference, activityLevel, membership);
             members.push_back(newMember);
+
+            // Save to CSV
+            std::ofstream outFile("users.csv", std::ios::app);
+            if (!outFile) {
+                std::cerr << "Error: Unable to open users.csv for writing.\n";
+                return;
+            }
+
+            // Append the new member to CSV
+            outFile << username << ",defaultPass,MEMBER," << name << "," << age << "," << gender << ","
+                << height << "," << weight << "," << dietPreference << "," << activityLevel  << "\n";
+
+            outFile.close();  // Save changes
+            std::cout << "Member " << name << " added successfully!\n";
         }
         else if (choice == 2) {
-            std::vector<Member> members = Member::loadAllMembers();  
+            std::vector<Member> members = Member::loadAllMembers();
             Statistics::displayStats(members);
         }
     } while (choice != 3);
 }
+
 
 bool userExists(const std::string& username) {
     std::ifstream file("users.csv");

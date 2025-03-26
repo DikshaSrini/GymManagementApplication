@@ -48,45 +48,43 @@ std::unordered_map<std::string, UserData> loadUsers() {
     std::unordered_map<std::string, UserData> users;
     std::ifstream file("users.csv");
 
+    if (!file.is_open()) {
+        std::cerr << "ERROR: Could not open users.csv" << std::endl;
+        return users;
+    }
+
     std::string line;
-    // Skip header
-    std::getline(file, line);
+    std::getline(file, line); // Skip header
 
     while (std::getline(file, line)) {
-        std::stringstream ss(line);
-        std::string item;
+        std::istringstream ss(line);
         UserData user;
+        std::string roleStr;
 
         std::getline(ss, user.username, ',');
         std::getline(ss, user.password, ',');
-
-        std::string roleStr;
         std::getline(ss, roleStr, ',');
+
         if (roleStr == "ADMIN") user.role = ADMIN;
         else if (roleStr == "TRAINER") user.role = TRAINER;
         else if (roleStr == "MEMBER") user.role = MEMBER;
+        else user.role = NONE;
 
         std::getline(ss, user.name, ',');
-
-        std::string ageStr;
-        std::getline(ss, ageStr, ',');
-        user.age = std::stoi(ageStr);
-
+        ss >> user.age;
+        ss.ignore();
         std::getline(ss, user.gender, ',');
 
         if (user.role == MEMBER) {
-            std::string heightStr, weightStr;
-            std::getline(ss, heightStr, ',');
-            std::getline(ss, weightStr, ',');
-            user.height = std::stod(heightStr);
-            user.weight = std::stod(weightStr);
+            ss >> user.height;
+            ss.ignore();
+            ss >> user.weight;
+            ss.ignore();
             std::getline(ss, user.dietPreference, ',');
             std::getline(ss, user.activityLevel, ',');
         }
         else if (user.role == TRAINER) {
-            std::string expStr;
-            std::getline(ss, expStr, ',');
-            user.yearsOfExperience = std::stoi(expStr);
+            ss >> user.yearsOfExperience;
         }
 
         users[user.username] = user;
@@ -95,6 +93,7 @@ std::unordered_map<std::string, UserData> loadUsers() {
     file.close();
     return users;
 }
+
 
 // Save users to CSV file
 void saveUsers(const std::unordered_map<std::string, UserData>& users) {
@@ -123,7 +122,7 @@ void saveUsers(const std::unordered_map<std::string, UserData>& users) {
                 << user.activityLevel << ",";
         }
         else if (user.role == TRAINER) {
-            file << ",,,," << user.yearsOfExperience;
+            file << "0,0,NA,NA," << user.yearsOfExperience << "\n";
         }
 
         file << "\n";
@@ -154,13 +153,11 @@ void User::registerUser() {
     std::cout << "Select Role:\n";
     std::cout << "1. Member\n";
     std::cout << "2. Trainer\n";
-    std::cout << "3. Admin\n";
     std::cout << "Choice: ";
     std::cin >> roleChoice;
 
     if (roleChoice == 1) newUser.role = MEMBER;
     else if (roleChoice == 2) newUser.role = TRAINER;
-    else if (roleChoice == 3) newUser.role = ADMIN;
     else {
         std::cout << "Invalid choice! Registration failed.\n";
         return;
@@ -214,15 +211,19 @@ Role User::login() {
     std::cout << "Enter Password: ";
     passwordInput = getPassword();
 
-    auto users = loadUsers();
+    try {
+        auto users = loadUsers();
 
-    if (users.count(usernameInput) && users[usernameInput].password == passwordInput) {
         std::cout << "Login Successful!\n";
         loggedInUsername = usernameInput;
         return users[usernameInput].role;
     }
-    else {
-        std::cout << "Invalid Credentials!\n";
+    catch (const std::exception& e) {
+        std::cerr << "EXCEPTION during login: " << e.what() << std::endl;
+        return NONE;
+    }
+    catch (...) {
+        std::cerr << "UNKNOWN EXCEPTION during login" << std::endl;
         return NONE;
     }
 }
@@ -248,7 +249,6 @@ Role User::getUserRole(const std::string& username) {
     return NONE;
 }
 
-// This is the function that was missing or incorrectly implemented
 std::string User::getUsername() {
     return loggedInUsername;
 }

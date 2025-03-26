@@ -3,6 +3,7 @@
 #include <iostream>
 #include <unordered_map>
 
+
 class Trainer {
     std::string name, specialization;
 public:
@@ -16,6 +17,7 @@ public:
     static void assignTrainerToMember(std::string memberName);
     void scheduleClass();
     void viewMemberProgress(const std::string& memberUsername) const;
+    void sendNotification();
 };
 
 

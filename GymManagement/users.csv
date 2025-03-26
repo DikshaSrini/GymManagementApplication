@@ -1,13 +1,3 @@
-username,password,role,name,age,gender,height,weight,dietPreference,activityLevel,yearsOfExperience,,,
-Bhavana,bhavana,MEMBER,Bhavana,20,Female,1.7,65,Vegan,Very Active,,,,
-Esha,esha,MEMBER,Esha,22,Female,1.65,55,Vegetarian,Sedentary,,,,
-Radhika,radhika,MEMBER,Radhika,30,Female,1.68,59,Vegetarian,Moderately Active,,,,
-Chandan,chandan,MEMBER,Chandan,25,Male,1.85,80,Ketogenic,Super Active,,,,
-Fiona,fiona,MEMBER,Fiona,20,Female,1.5,40,Vegan,Lightly Active,,,,
-Sneha,sneha,MEMBER,Sneha,23,Female,1.55,45,Vegan,Lightly Active,,,,
-Sanjana,sanjana,MEMBER,Sanjana,35,Female,1.55,48,Vegan,Sedentary,,,,
-Meghana,meghana,MEMBER,Meghana,43,Female,1.58,49,Vegan,Lightly Active,,,,
-John,john,MEMBER,John,23,Male,1.88,75,Vegan,Sedentary,,,,
-Diksha,diksha,MEMBER,Diksha,22,Female,1.650000,55.000000,Vegan,Lightly Active,Platinum,2025-03-26,2025-09-26,true
-Ananya,ananya,MEMBER,Ananya,22,Female,1.550000,54.000000,Non-Vegetarian,Moderately Active,,,,true
-Shreyas,shreyas,MEMBER,Shreyas,20,Male,1.780000,60.000000,Non-Vegetarian,Very Active,,,,true
+username,password,role,name,age,gender,height,weight,dietPreference,activityLevel,yearsOfExperience
+Diksha,diksha,MEMBER,Diksha,21,Female,1.65,55,Vegetarian,Lightly Active,
+Rohit,rohit,MEMBER,Rohit,25,Male,1.83,70,Non-Vegetarian,Very Active,
