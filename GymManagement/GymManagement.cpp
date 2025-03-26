@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include "User.h"
 #include "Member.h"
+#include "Statistics.h"
 #include "Trainer.h"
 #include "BMI.h"
 #include "Workout.h"
@@ -12,12 +13,14 @@
 
 void memberMenu(std::string username);
 void trainerMenu(std::string username);
-void adminMenu();
 bool userExists(const std::string& username);
 std::string selectMembershipType();
-
+void adminMenu(std::vector<Member>& members);
 
 int main() {
+
+    std::vector<Member> members;  // Declare members list
+
     std::cout << "***** Welcome to SynerGym *****\n\n";
 
     std::string username;
@@ -91,7 +94,7 @@ int main() {
 
     std::cout << "User Role: " << userRole << "\n"; // Debugging statement
 
-    if (userRole == ADMIN) adminMenu();
+    if (userRole == ADMIN) adminMenu(members);
     else if (userRole == TRAINER) trainerMenu(user.getUsername());
     else if (userRole == MEMBER) memberMenu(user.getUsername());
     else std::cout << "Exiting...\n";
@@ -182,7 +185,7 @@ void trainerMenu(std::string username) {
     } while (choice != 3);
 }
 
-void adminMenu() {
+void adminMenu(std::vector<Member>& members) {
     int choice;
     do {
         std::cout << "\nAdmin Menu:\n1. Add Member\n2. Remove Trainer\n3. Assign Trainer to Member\n4. View Stats\n5. Exit\nChoice: ";
@@ -191,29 +194,22 @@ void adminMenu() {
         if (choice == 1) {
             std::string name, membership;
             int age;
+            double height, weight;
+
             std::cout << "Enter Member Name: "; std::cin >> name;
             std::cout << "Enter Age: "; std::cin >> age;
+            std::cout << "Enter Height (m): "; std::cin >> height;
+            std::cout << "Enter Weight (kg): "; std::cin >> weight;
 
             std::cout << "Select membership type for new member:\n";
             membership = selectMembershipType();
 
-            // Create new member with full attributes
-            Member newMember(name, "defaultPass", "MEMBER", name, age, "Unspecified", 0.0, 0.0, "None", "Sedentary", membership);
-            std::cout << "New Member Added!\n";
-        }
-        else if (choice == 2) {
-            std::string trainerName;
-            std::cout << "Enter Trainer Name to Remove: "; std::cin >> trainerName;
-            Trainer::removeTrainer();
-        }
-        else if (choice == 3) {
-            std::string memberName;
-            std::cout << "Enter Member Name: ";
-            std::cin >> memberName;
-            Trainer::assignTrainerToMember(memberName);
+            Member newMember(name, "defaultPass", "MEMBER", name, age, "Unspecified", height, weight, "None", "Sedentary", membership);
+            members.push_back(newMember);
         }
         else if (choice == 4) {
-            std::cout << "Displaying Gym Statistics...\n";
+            std::vector<Member> members = Member::loadAllMembers();  
+            Statistics::displayStats(members);
         }
     } while (choice != 5);
 }

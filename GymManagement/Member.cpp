@@ -13,63 +13,6 @@ Member::Member(std::string uname, std::string pwd, std::string r, std::string n,
     activityLevel(al), membershipType(mType) {
 }
 
-void Member::loadMemberDetails() {
-    std::ifstream file("users.csv");
-    if (!file.is_open()) {
-        std::cout << "Warning: Could not open members file. Creating new profile.\n";
-        return;
-    }
-
-    std::string line;
-    std::getline(file, line); // Skip header
-
-    while (std::getline(file, line)) {
-        std::istringstream ss(line);
-        std::string uname, ageStr, heightStr, weightStr, yoeStr;
-
-        std::getline(ss, uname, ',');
-        if (uname == username) {
-            std::getline(ss, password, ',');
-            std::getline(ss, role, ',');
-            std::getline(ss, name, ',');
-            std::getline(ss, ageStr, ',');
-            std::getline(ss, gender, ',');  // Gender is read here
-            std::getline(ss, heightStr, ',');
-            std::getline(ss, weightStr, ',');
-            std::getline(ss, dietPreference, ',');
-            std::getline(ss, activityLevel, ',');
-
-            // Trim spaces from gender
-            gender.erase(0, gender.find_first_not_of(" \t\r\n"));
-            gender.erase(gender.find_last_not_of(" \t\r\n") + 1);
-
-            // Debug prints
-            std::cout << "DEBUG: Extracted gender: [" << gender << "]" << std::endl;
-
-            // Ensure proper gender formatting
-            if (gender == "male" || gender == "Male") {
-                gender = "Male";
-            }
-            else if (gender == "female" || gender == "Female") {
-                gender = "Female";
-            }
-            else {
-                gender = "Other";
-            }
-
-            std::cout << "DEBUG: Final gender stored: [" << gender << "]" << std::endl;
-            file.close();
-            return;
-        }
-    }
-
-    file.close();
-    std::cout << "Note: No existing profile found. Creating new profile.\n";
-}
-
-
-
-
 void Member::setMembershipType(const std::string& mType) {
     membershipType = mType;
 }
@@ -190,7 +133,7 @@ void Member::updateProfile() {
 
 // View profile (Read-only)
 void Member::viewDetails() {
-    loadMemberDetails();
+    loadAllMembers();
 
     std::cout << "\n===== MEMBER DETAILS =====" << std::endl;
     std::cout << "Username: " << username << std::endl;
@@ -205,3 +148,52 @@ void Member::viewDetails() {
     std::cout << "Activity Level: " << (activityLevel.empty() ? "Not set" : activityLevel) << std::endl;
     std::cout << "=========================" << std::endl;
 }
+
+std::vector<Member> Member::loadAllMembers() {
+    std::vector<Member> members;
+    std::ifstream file("users.csv");
+
+    if (!file.is_open()) {
+        std::cerr << "Error: Could not open users.csv\n";
+        return members;
+    }
+
+    std::string line;
+    std::getline(file, line); // Skip header
+
+    while (std::getline(file, line)) {
+        std::stringstream ss(line);
+        std::string username, password, role, name, gender, dietPreference, activityLevel, membershipType;
+        int age;
+        double height, weight;
+
+        std::getline(ss, username, ',');
+        std::getline(ss, password, ',');
+        std::getline(ss, role, ',');
+        std::getline(ss, name, ',');
+        ss >> age;
+        ss.ignore();
+        std::getline(ss, gender, ',');
+        ss >> height;
+        ss.ignore();
+        ss >> weight;
+        ss.ignore();
+        std::getline(ss, dietPreference, ',');
+        std::getline(ss, activityLevel, ',');
+        std::getline(ss, membershipType, ',');
+
+        // Validate data
+        if (username.empty() || password.empty() || role.empty() || name.empty() || age <= 0 || height <= 0 || weight <= 0) {
+            std::cerr << "Invalid data found in CSV file. Skipping entry.\n";
+            continue;
+        }
+
+        members.emplace_back(username, password, role, name, age, gender, height, weight, dietPreference, activityLevel, membershipType);
+    }
+
+    file.close();
+    return members;
+}
+
+
+

@@ -42,10 +42,10 @@
     <ClCompile Include="Progress.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Notification.cpp">
+    <ClCompile Include="Member.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Member.cpp">
+    <ClCompile Include="Statistics.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -74,10 +74,10 @@
     <ClInclude Include="Progress.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Notification.h">
+    <ClInclude Include="Member.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Member.h">
+    <ClInclude Include="Statistics.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

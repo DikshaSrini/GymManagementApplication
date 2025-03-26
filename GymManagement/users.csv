@@ -1,2 +1,5 @@
-username,password,role,name,age,gender,height,weight,dietPreference,activityLevel
-Diksha,diksha123,MEMBER,Diksha,22,Female,1.640000,55.000000,Vegetarian,Sedentary
+username,password,role,name,age,gender,height,weight,dietPreference,activityLevel,yearsOfExperience
+Diksha,diksha123,MEMBER,Diksha,22,Female,1.64,55,Vegetarian,Sedentary,
+Ananya,ananya,MEMBER,Ananya,22,Female,1.55,54,Non-Vegetarian,Moderately Active,
+Bhavana,bhavana,MEMBER,Bhavana,20,Female,1.7,65,Vegan,Very Active,
+Chandan,chandan,MEMBER,Chandan,25,Male,1.85,80,Ketogenic,Super Active,

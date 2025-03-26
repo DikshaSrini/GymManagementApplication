@@ -1,7 +1,6 @@
 #ifndef BMI_H
 #define BMI_H
-
-#include <iostream>
+#include <string>
 
 class BMI {
 public:

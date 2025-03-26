@@ -1,18 +1,13 @@
-#ifndef BMI_H
-#define BMI_H
-#include <string>
-class BMI {
-public:
-    static double computeBMI(double weight, double height);
-    static std::string categorizeBMI(double bmi);
-    static std::string getHealthTips(double bmi);
-};
-#endif
-
 #include "BMI.h"
+#include <iostream>
 
 double BMI::computeBMI(double weight, double height) {
-    if (weight <= 0 || height <= 0) return -1;
+    std::cout << "[DEBUG] Calculating BMI: Weight = " << weight << ", Height = " << height << std::endl;
+
+    if (weight <= 0 || height <= 0) {
+        std::cout << "[ERROR] Invalid BMI inputs detected!\n";
+        return -1; // Return -1 for invalid cases
+    }
     return weight / (height * height);
 }
 

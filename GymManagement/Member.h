@@ -2,6 +2,7 @@
 #define MEMBER_H
 
 #include <string>
+#include <vector> // Required for std::vector<Member>
 
 class Member {
 private:
@@ -24,11 +25,17 @@ public:
     Member(std::string uname, std::string pwd, std::string r, std::string n, int a,
         std::string g, double h, double w, std::string dp, std::string al, std::string mType);
 
-    void setMembershipType(const std::string& mType);  // Move this to public
-    std::string getMembershipType() const;  // Getter function
+    void setMembershipType(const std::string& mType);
+    std::string getMembershipType() const;
+
+    // Add these getters
+    double getHeight() const { return height; }
+    double getWeight() const { return weight; }
 
     void updateProfile();
     void viewDetails();
+
+    static std::vector<Member> loadAllMembers();
 };
 
 #endif
