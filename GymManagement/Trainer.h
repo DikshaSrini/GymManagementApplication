@@ -15,6 +15,7 @@ public:
     static void removeTrainer();
     static void assignTrainerToMember(std::string memberName);
     void scheduleClass();
+    void viewMemberProgress(const std::string& memberUsername) const;
 };
 
 

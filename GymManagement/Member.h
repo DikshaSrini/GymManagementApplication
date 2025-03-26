@@ -20,11 +20,10 @@ private:
     std::string membershipType;
     std::string startDate;
     std::string endDate;
+    bool workoutAssigned; // Add this flag
 
     std::string getCurrentDate();
     std::string calculateEndDate(const std::string& startDate);
-
-    void saveMemberDetails();
 
 public:
     Member(std::string uname, std::string pwd, std::string r, std::string n, int a,
@@ -39,6 +38,12 @@ public:
     void setEndDate(const std::string& end);
     std::string getEndDate() const;
 
+    void setWorkoutAssigned(bool assigned);
+    bool isWorkoutAssigned() const;
+
+    void updateProgress();
+    void saveProgress(const std::string& date, double weight, const std::string& description) const;
+
     // Add these getters
     double getHeight() const { return height; }
     double getWeight() const { return weight; }
@@ -46,7 +51,10 @@ public:
     void updateProfile();
     void viewDetails();
 
+    void saveMemberDetails();
+
     static std::vector<Member> loadAllMembers();
+    void saveProgress(const std::string& date, const std::string& progress);
 };
 
 #endif

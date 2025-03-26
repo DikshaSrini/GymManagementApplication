@@ -1,10 +1,10 @@
-#ifndef PROGRESS_H
-#define PROGRESS_H
+#pragma once
+
 #include <string>
+#include <vector>
 
 class Progress {
 public:
-    static std::string trackProgress(int weeks);
+    static void trackProgress(const std::string& username, double weight, double bmi, const std::string& achievement);
+    static void viewProgress(const std::string& username);
 };
-
-#endif

@@ -5,14 +5,14 @@
 #include <vector>
 #include <limits>
 #include <ctime>
-#include <iomanip>
+#include <iomanip> // Include this header for setfill and setw
 
 // Constructor
 Member::Member(std::string uname, std::string pwd, std::string r, std::string n, int a,
     std::string g, double h, double w, std::string dp, std::string al, std::string mType)
     : username(uname), password(pwd), role(r), name(n), age(a),
     gender(g), height(h), weight(w), dietPreference(dp),
-    activityLevel(al), membershipType(mType) {
+    activityLevel(al), membershipType(mType), workoutAssigned(true) {
     startDate = getCurrentDate();
     endDate = calculateEndDate(startDate);
 }
@@ -41,6 +41,14 @@ std::string Member::getEndDate() const {
     return endDate;
 }
 
+void Member::setWorkoutAssigned(bool assigned) {
+    workoutAssigned = assigned;
+}
+
+bool Member::isWorkoutAssigned() const {
+    return workoutAssigned;
+}
+
 std::string Member::getCurrentDate() {
     std::time_t t = std::time(nullptr);
     std::tm now;
@@ -65,7 +73,6 @@ std::string Member::calculateEndDate(const std::string& startDate) {
     return oss.str();
 }
 
-// Save member details to CSV
 void Member::saveMemberDetails() {
     std::vector<std::string> allMembers;
     bool memberFound = false;
@@ -83,6 +90,7 @@ void Member::saveMemberDetails() {
 
             if (uname == username) {
                 memberFound = true;
+                std::cout << "Debug: Found member " << username << " in CSV.\n";
             }
             else {
                 allMembers.push_back(line);
@@ -91,7 +99,15 @@ void Member::saveMemberDetails() {
         inFile.close();
     }
     else {
-        header = "Username,Password,Role,Name,Age,Gender,Height,Weight,DietPreference,ActivityLevel";
+        header = "Username,Password,Role,Name,Age,Gender,Height,Weight,DietPreference,ActivityLevel,MembershipType,StartDate,EndDate,WorkoutAssigned";
+    }
+
+    std::string workoutAssignedStr;
+    if (workoutAssigned) {
+        workoutAssignedStr = "true";
+    }
+    else {
+        workoutAssignedStr = "false";
     }
 
     std::string updatedMember = username + "," +
@@ -103,7 +119,13 @@ void Member::saveMemberDetails() {
         std::to_string(height) + "," +
         std::to_string(weight) + "," +
         dietPreference + "," +
-        activityLevel;
+        activityLevel + "," +
+        membershipType + "," +
+        startDate + "," +
+        endDate + "," +
+        workoutAssignedStr;
+
+    std::cout << "Debug: Updated member details: " << updatedMember << "\n";
 
     std::ofstream outFile("users.csv");
     if (!outFile.is_open()) {
@@ -118,7 +140,7 @@ void Member::saveMemberDetails() {
     outFile << updatedMember << std::endl;
 
     outFile.close();
-    std::cout << "Profile saved successfully!\n";
+    std::cout << "Profile saved successfully! Debug: workoutAssigned = " << workoutAssignedStr << "\n";
 }
 
 // Update profile (Only editable fields)
@@ -155,16 +177,12 @@ void Member::updateProfile() {
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Clear input buffer
             std::cout << "Enter new diet preference: ";
             std::getline(std::cin, dietPreference);
-            std::cout << "DEBUG: Diet preference updated to: " << dietPreference << std::endl; // Debugging
             break;
-
         case 5:
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Clear input buffer
             std::cout << "Enter new activity level: ";
             std::getline(std::cin, activityLevel);
-            std::cout << "DEBUG: Activity level updated to: " << activityLevel << std::endl; // Debugging
             break;
-
         case 6:
             continueUpdating = false;
             saveMemberDetails();
@@ -175,13 +193,12 @@ void Member::updateProfile() {
     }
 }
 
-// View profile (Read-only)
 void Member::viewDetails() {
     loadAllMembers();
 
     std::cout << "\n===== MEMBER DETAILS =====" << std::endl;
     std::cout << "Username: " << username << std::endl;
-    std::cout << "Password: " << password << std::endl; 
+    std::cout << "Password: " << password << std::endl;
     std::cout << "Role: " << role << std::endl;
     std::cout << "Name: " << name << std::endl;
     std::cout << "Age: " << age << std::endl;
@@ -241,6 +258,3 @@ std::vector<Member> Member::loadAllMembers() {
     file.close();
     return members;
 }
-
-
-

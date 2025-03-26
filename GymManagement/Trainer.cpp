@@ -1,5 +1,9 @@
 #include "Trainer.h"
 #include "string"
+#include <iomanip>
+#include <iostream>
+#include <fstream>
+#include <sstream>
 
 // Create an unordered map to store trainers with their names as keys
 std::unordered_map<std::string, Trainer> trainers;
@@ -71,4 +75,32 @@ void Trainer::scheduleClass() {
     std::cin >> time;
 
     std::cout << "Class scheduled on " << date << " at " << time << " by Trainer " << name << ".\n";
+}
+
+void Trainer::viewMemberProgress(const std::string& memberUsername) const {
+    std::string filename = memberUsername + "_progress.csv";
+    std::ifstream inFile(filename);
+
+    if (!inFile.is_open()) {
+        std::cerr << "Error: Could not open file " << filename << " for reading.\n";
+        return;
+    }
+
+    std::string line;
+    std::cout << "\n===== PROGRESS FOR " << memberUsername << " =====\n";
+    while (std::getline(inFile, line)) {
+        std::istringstream ss(line);
+        std::string date, weight, description;
+        std::getline(ss, date, ',');
+        std::getline(ss, weight, ',');
+        std::getline(ss, description, ',');
+
+        std::cout << "Date: " << date << "\n";
+        std::cout << "Weight: " << weight << " kg\n";
+        std::cout << "Description: " << description << "\n";
+        std::cout << "------------------------\n";
+    }
+
+    inFile.close();
+    std::cout << "Debug: Finished reading progress for " << memberUsername << "\n";
 }

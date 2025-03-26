@@ -1,6 +1,7 @@
 username,password,role,name,age,gender,height,weight,dietPreference,activityLevel,yearsOfExperience
-Ananya,ananya,MEMBER,Ananya,22,Female,1.55,54,Non-Vegetarian,Moderately Active,
+Esha,password123,MEMBER,Esha,22,Female,1.65,55,Vegetarian,Sedentary,
 Bhavana,bhavana,MEMBER,Bhavana,20,Female,1.7,65,Vegan,Very Active,
+Ananya,ananya,MEMBER,Ananya,22,Female,1.55,54,Non-Vegetarian,Moderately Active,
 Chandan,chandan,MEMBER,Chandan,25,Male,1.85,80,Ketogenic,Super Active,
-Diksha,password123,MEMBER,Diksha,22,Female,1.63,55,Vegetarian,Active,
-Esha,password123,MEMBER,Esha,22,Female,1.650000,55.000000,Vegetarian,Active
+Fiona,fiona,MEMBER,Fiona,20,Female,1.500000,40.000000,Vegan,Lightly Active,,,,true
+Diksha,password123,MEMBER,Diksha,22,Female,1.630000,55.000000,Vegetarian,Active,Platinum,2025-03-26,2025-09-26,true

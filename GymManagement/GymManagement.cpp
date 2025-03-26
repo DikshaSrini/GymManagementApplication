@@ -10,6 +10,7 @@
 #include "BMI.h"
 #include "Workout.h"
 #include "Payment.h"
+#include "Progress.h"
 
 void memberMenu(std::string username);
 void trainerMenu(std::string username);
@@ -117,7 +118,8 @@ void memberMenu(std::string username) {
         std::cout << "5. View Workout Plan\n";
         std::cout << "6. Make Payment\n";
         std::cout << "7. View Membership Status\n";
-        std::cout << "8. Exit\n";
+        std::cout << "8. Update Progress\n";
+        std::cout << "9. Exit\n";
         std::cout << "Choice: ";
         std::cin >> choice;
 
@@ -135,11 +137,24 @@ void memberMenu(std::string username) {
             double bmi = BMI::computeBMI(weight, height);
             std::cout << "Your BMI: " << bmi << "\nCategory: " << BMI::categorizeBMI(bmi)
                 << "\nHealth Tip: " << BMI::getHealthTips(bmi) << "\n";
+            // Track progress
+            Progress::trackProgress(username, weight, bmi, "BMI calculated");
         }
-        else if (choice == 5) Workout::viewWorkoutPlan(username);
+        else if (choice == 5) {
+            if (member.isWorkoutAssigned()) {
+                Workout::viewWorkoutPlan(username); // Check if workout plan has been assigned
+            }
+            else {
+                std::cout << "Workout plan has not been assigned yet.\n";
+            }
+        }
         else if (choice == 6) Payment::makePayment(username);
-        else if (choice == 7) Payment::viewPaymentStatus(username);
-    } while (choice != 8);
+        else if (choice == 7) {
+            std::cout << "Membership Start Date: " << member.getStartDate() << "\n";
+            std::cout << "Membership End Date: " << member.getEndDate() << "\n";
+        }
+        else if (choice == 8) Progress::viewProgress(username);
+    } while (choice != 9);
 }
 
 // Function to handle membership type selection
@@ -179,7 +194,8 @@ void trainerMenu(std::string username) {
             std::string memberName;
             std::cout << "Enter Member Name: ";
             std::cin >> memberName;
-            Workout::assignWorkoutPlan(memberName);
+            Workout::generateWorkoutPlan(memberName);
+            std::cout << "Workout plan assigned to " << memberName << " successfully!\n";
         }
         else if (choice == 2) trainer.scheduleClass();
     } while (choice != 3);
