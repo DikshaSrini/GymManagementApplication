@@ -116,7 +116,7 @@ void memberMenu(std::string username) {
         std::cout << "4. Calculate BMI\n";
         std::cout << "5. View Workout Plan\n";
         std::cout << "6. Make Payment\n";
-        std::cout << "7. View Payment Status\n";
+        std::cout << "7. View Membership Status\n";
         std::cout << "8. Exit\n";
         std::cout << "Choice: ";
         std::cin >> choice;
@@ -219,7 +219,7 @@ bool userExists(const std::string& username) {
     if (!file.is_open()) return false;
 
     std::string line;
-    std::getline(file, line); // Skip header
+    std::getline(file, line);
 
     while (std::getline(file, line)) {
         std::istringstream ss(line);

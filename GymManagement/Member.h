@@ -2,7 +2,8 @@
 #define MEMBER_H
 
 #include <string>
-#include <vector> // Required for std::vector<Member>
+#include <vector> 
+#include <ctime>
 
 class Member {
 private:
@@ -17,8 +18,12 @@ private:
     std::string dietPreference;
     std::string activityLevel;
     std::string membershipType;
+    std::string startDate;
+    std::string endDate;
 
-    void loadMemberDetails();
+    std::string getCurrentDate();
+    std::string calculateEndDate(const std::string& startDate);
+
     void saveMemberDetails();
 
 public:
@@ -27,6 +32,12 @@ public:
 
     void setMembershipType(const std::string& mType);
     std::string getMembershipType() const;
+
+    void setStartDate(const std::string& start);
+    std::string getStartDate() const;
+
+    void setEndDate(const std::string& end);
+    std::string getEndDate() const;
 
     // Add these getters
     double getHeight() const { return height; }

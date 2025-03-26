@@ -4,6 +4,8 @@
 #include <sstream>
 #include <vector>
 #include <limits>
+#include <ctime>
+#include <iomanip>
 
 // Constructor
 Member::Member(std::string uname, std::string pwd, std::string r, std::string n, int a,
@@ -11,6 +13,8 @@ Member::Member(std::string uname, std::string pwd, std::string r, std::string n,
     : username(uname), password(pwd), role(r), name(n), age(a),
     gender(g), height(h), weight(w), dietPreference(dp),
     activityLevel(al), membershipType(mType) {
+    startDate = getCurrentDate();
+    endDate = calculateEndDate(startDate);
 }
 
 void Member::setMembershipType(const std::string& mType) {
@@ -19,6 +23,46 @@ void Member::setMembershipType(const std::string& mType) {
 
 std::string Member::getMembershipType() const {
     return membershipType;
+}
+
+void Member::setStartDate(const std::string& start) {
+    startDate = start;
+}
+
+std::string Member::getStartDate() const {
+    return startDate;
+}
+
+void Member::setEndDate(const std::string& end) {
+    endDate = end;
+}
+
+std::string Member::getEndDate() const {
+    return endDate;
+}
+
+std::string Member::getCurrentDate() {
+    std::time_t t = std::time(nullptr);
+    std::tm now;
+    localtime_s(&now, &t);
+    std::ostringstream oss;
+    oss << (now.tm_year + 1900) << '-'
+        << std::setw(2) << std::setfill('0') << (now.tm_mon + 1) << '-'
+        << std::setw(2) << std::setfill('0') << now.tm_mday;
+    return oss.str();
+}
+
+std::string Member::calculateEndDate(const std::string& startDate) {
+    std::tm tm = {};
+    std::istringstream ss(startDate);
+    ss >> std::get_time(&tm, "%Y-%m-%d");
+    tm.tm_mon += 6; // Add 6 months
+    std::mktime(&tm); // Normalize the date
+    std::ostringstream oss;
+    oss << (tm.tm_year + 1900) << '-'
+        << std::setw(2) << std::setfill('0') << (tm.tm_mon + 1) << '-'
+        << std::setw(2) << std::setfill('0') << tm.tm_mday;
+    return oss.str();
 }
 
 // Save member details to CSV
@@ -146,6 +190,9 @@ void Member::viewDetails() {
     std::cout << "Weight: " << (weight > 0 ? std::to_string(weight) + " kg" : "Not set") << std::endl;
     std::cout << "Diet Preference: " << (dietPreference.empty() ? "Not set" : dietPreference) << std::endl;
     std::cout << "Activity Level: " << (activityLevel.empty() ? "Not set" : activityLevel) << std::endl;
+    std::cout << "Membership Type: " << membershipType << std::endl;
+    std::cout << "Start Date: " << startDate << std::endl;
+    std::cout << "End Date: " << endDate << std::endl;
     std::cout << "=========================" << std::endl;
 }
 
