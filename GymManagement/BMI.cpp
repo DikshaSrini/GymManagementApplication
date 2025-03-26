@@ -2,7 +2,7 @@
 #include <iostream>
 
 double BMI::computeBMI(double weight, double height) {
-    std::cout << "[DEBUG] Calculating BMI: Weight = " << weight << ", Height = " << height << std::endl;
+    std::cout << "Calculating BMI: Weight = " << weight << ", Height = " << height << std::endl;
 
     if (weight <= 0 || height <= 0) {
         std::cout << "[ERROR] Invalid BMI inputs detected!\n";

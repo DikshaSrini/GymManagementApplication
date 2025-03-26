@@ -2,6 +2,7 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <conio.h>
 #include <unordered_map>
 #include "User.h"
 #include "Member.h"
@@ -17,6 +18,26 @@ void trainerMenu(std::string username);
 bool userExists(const std::string& username);
 std::string selectMembershipType();
 void adminMenu(std::vector<Member>& members);
+
+std::string getHiddenPassword() {
+    std::string password;
+    char ch;
+
+    while ((ch = _getch()) != '\r') { // Stop when Enter (Carriage Return) is pressed
+        if (ch == '\b') { // Handle backspace
+            if (!password.empty()) {
+                std::cout << "\b \b";
+                password.pop_back();
+            }
+        }
+        else {
+            password.push_back(ch);
+            std::cout << '*'; // Show * instead of actual characters
+        }
+    }
+    std::cout << std::endl;
+    return password;
+}
 
 int main() {
 
@@ -38,8 +59,7 @@ int main() {
     else {
         if (username == "admin") {
             std::cout << "Enter Password: ";
-            std::string password;
-            std::cin >> password;
+            std::string password = getHiddenPassword();;
             if (password == "adminPass") {
                 std::cout << "Welcome back, Admin!\n";
                 userRole = ADMIN;
@@ -51,8 +71,7 @@ int main() {
         }
         else if (username == "trainer") {
             std::cout << "Enter Password: ";
-            std::string password;
-            std::cin >> password;
+            std::string password = getHiddenPassword();
             if (password == "trainerPass") {
                 std::cout << "Welcome back, Trainer!\n";
                 userRole = TRAINER;
@@ -65,8 +84,7 @@ int main() {
         else if (userExists(username)) {
             std::cout << "Welcome back, " << username << "!\n";
             std::cout << "Enter Password: ";
-            std::string password;
-            std::cin >> password;
+            std::string password = getHiddenPassword();
 
             if (user.verifyCredentials(username, password)) {
                 std::cout << "Login Successful!\n";
@@ -93,7 +111,6 @@ int main() {
         }
     }
 
-    std::cout << "User Role: " << userRole << "\n"; // Debugging statement
 
     if (userRole == ADMIN) adminMenu(members);
     else if (userRole == TRAINER) trainerMenu(user.getUsername());
@@ -106,7 +123,7 @@ int main() {
 // Updated member menu function with membership type selection
 void memberMenu(std::string username) {
     // Create member object with full attributes
-    Member member(username, "password123", "MEMBER", username, 22, "Female", 1.65, 55.0, "Vegetarian", "Active", "Bronze");
+    Member member(username, "diksha", "MEMBER", username, 22, "Female", 1.65, 55.0, "Vegetarian", "Lightly Active", "Bronze");
 
     int choice;
     do {
@@ -118,8 +135,9 @@ void memberMenu(std::string username) {
         std::cout << "5. View Workout Plan\n";
         std::cout << "6. Make Payment\n";
         std::cout << "7. View Membership Status\n";
-        std::cout << "8. Update Progress\n";
-        std::cout << "9. Exit\n";
+        std::cout << "8. Track Progress\n";
+        std::cout << "9. View Progress\n";
+        std::cout << "10. Exit\n";
         std::cout << "Choice: ";
         std::cin >> choice;
 
@@ -131,14 +149,21 @@ void memberMenu(std::string username) {
         else if (choice == 2) member.viewDetails();
         else if (choice == 3) member.updateProfile();
         else if (choice == 4) {
-            double weight, height;
-            std::cout << "Enter weight (kg): "; std::cin >> weight;
-            std::cout << "Enter height (m): "; std::cin >> height;
-            double bmi = BMI::computeBMI(weight, height);
-            std::cout << "Your BMI: " << bmi << "\nCategory: " << BMI::categorizeBMI(bmi)
-                << "\nHealth Tip: " << BMI::getHealthTips(bmi) << "\n";
-            // Track progress
-            Progress::trackProgress(username, weight, bmi, "BMI calculated");
+            // Fetch stored height and weight
+            double weight = member.getWeight();
+            double height = member.getHeight();
+
+            if (height > 0 && weight > 0) {
+                double bmi = BMI::computeBMI(weight, height);
+                std::cout << "Your BMI: " << bmi << "\nCategory: " << BMI::categorizeBMI(bmi)
+                    << "\nHealth Tip: " << BMI::getHealthTips(bmi) << "\n";
+
+                // Track progress
+                Progress::trackProgress(username, weight, bmi, "BMI calculated");
+            }
+            else {
+                std::cout << "Height or weight information is missing. Please update your profile.\n";
+            }
         }
         else if (choice == 5) {
             if (member.isWorkoutAssigned()) {
@@ -153,8 +178,26 @@ void memberMenu(std::string username) {
             std::cout << "Membership Start Date: " << member.getStartDate() << "\n";
             std::cout << "Membership End Date: " << member.getEndDate() << "\n";
         }
-        else if (choice == 8) Progress::viewProgress(username);
-    } while (choice != 9);
+        else if (choice == 8) {
+   
+            double weight, bmi;
+            std::string achievement;
+
+            std::cout << "Enter current weight (kg): ";
+            std::cin >> weight;
+
+            std::cout << "Enter current BMI: ";
+            std::cin >> bmi;
+
+            std::cout << "Enter an achievement or note about your progress: ";
+            std::cin.ignore(); // Clear input buffer
+            std::getline(std::cin, achievement);
+
+            // Track the progress
+            Progress::trackProgress(username, weight, bmi, achievement);
+        }
+        else if (choice == 9) Progress::viewProgress(username);
+    } while (choice != 10);
 }
 
 // Function to handle membership type selection
@@ -204,7 +247,7 @@ void trainerMenu(std::string username) {
 void adminMenu(std::vector<Member>& members) {
     int choice;
     do {
-        std::cout << "\nAdmin Menu:\n1. Add Member\n2. Remove Trainer\n3. Assign Trainer to Member\n4. View Stats\n5. Exit\nChoice: ";
+        std::cout << "\nAdmin Menu:\n1. Add Member\n2. View Stats\n3. Exit\nChoice: ";
         std::cin >> choice;
 
         if (choice == 1) {
@@ -223,11 +266,11 @@ void adminMenu(std::vector<Member>& members) {
             Member newMember(name, "defaultPass", "MEMBER", name, age, "Unspecified", height, weight, "None", "Sedentary", membership);
             members.push_back(newMember);
         }
-        else if (choice == 4) {
+        else if (choice == 2) {
             std::vector<Member> members = Member::loadAllMembers();  
             Statistics::displayStats(members);
         }
-    } while (choice != 5);
+    } while (choice != 3);
 }
 
 bool userExists(const std::string& username) {

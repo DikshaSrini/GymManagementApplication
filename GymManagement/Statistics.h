@@ -1,5 +1,4 @@
-#ifndef STATISTICS_H
-#define STATISTICS_H
+#pragma once
 
 #include <vector>
 #include "Member.h"
@@ -9,4 +8,4 @@ public:
     static void displayStats(const std::vector<Member>& members);
 };
 
-#endif
+

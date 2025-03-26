@@ -1,8 +1,6 @@
-#ifndef CLASS_H
-#define CLASS_H
+#pragma once
 #include <string>
 class Class {
 public:
     static std::string scheduleClass(std::string date);
 };
-#endif

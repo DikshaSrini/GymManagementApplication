@@ -1,6 +1,27 @@
 #include "User.h"
 #include <fstream>
 #include <sstream>
+#include <conio.h>
+
+std::string getPassword() {
+    std::string password;
+    char ch;
+
+    while ((ch = _getch()) != '\r') { // Stop when Enter (Carriage Return) is pressed
+        if (ch == '\b') { // Handle backspace
+            if (!password.empty()) {
+                std::cout << "\b \b";
+                password.pop_back();
+            }
+        }
+        else {
+            password.push_back(ch);
+            std::cout << '*'; // Show * instead of actual characters
+        }
+    }
+    std::cout << std::endl;
+    return password;
+}
 
 // Define the static member variable
 std::string User::loggedInUsername = "";
@@ -26,33 +47,6 @@ struct UserData {
 std::unordered_map<std::string, UserData> loadUsers() {
     std::unordered_map<std::string, UserData> users;
     std::ifstream file("users.csv");
-
-    // Add default admin if file doesn't exist
-    if (!file.is_open()) {
-        UserData admin;
-        admin.username = "admin";
-        admin.password = "admin123";
-        admin.role = ADMIN;
-        admin.name = "Administrator";
-        users["admin"] = admin;
-
-        // Add default trainer and member
-        UserData trainer;
-        trainer.username = "trainer1";
-        trainer.password = "trainer123";
-        trainer.role = TRAINER;
-        trainer.name = "John Trainer";
-        users["trainer1"] = trainer;
-
-        UserData member;
-        member.username = "member1";
-        member.password = "member123";
-        member.role = MEMBER;
-        member.name = "Jane Member";
-        users["member1"] = member;
-
-        return users;
-    }
 
     std::string line;
     // Skip header
@@ -154,7 +148,7 @@ void User::registerUser() {
     }
 
     std::cout << "Create Password: ";
-    std::cin >> newUser.password;
+    newUser.password = getPassword();
 
     int roleChoice;
     std::cout << "Select Role:\n";
@@ -218,7 +212,7 @@ Role User::login() {
     std::cout << "Enter Username: ";
     std::cin >> usernameInput;
     std::cout << "Enter Password: ";
-    std::cin >> passwordInput;
+    passwordInput = getPassword();
 
     auto users = loadUsers();
 

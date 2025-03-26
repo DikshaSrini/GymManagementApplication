@@ -1,5 +1,4 @@
-#ifndef BMI_H
-#define BMI_H
+#pragma once
 #include <string>
 
 class BMI {
@@ -9,4 +8,4 @@ public:
     static std::string getHealthTips(double bmi);
 };
 
-#endif
+

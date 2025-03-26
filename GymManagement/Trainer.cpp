@@ -102,5 +102,5 @@ void Trainer::viewMemberProgress(const std::string& memberUsername) const {
     }
 
     inFile.close();
-    std::cout << "Debug: Finished reading progress for " << memberUsername << "\n";
+
 }

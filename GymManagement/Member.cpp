@@ -90,7 +90,6 @@ void Member::saveMemberDetails() {
 
             if (uname == username) {
                 memberFound = true;
-                std::cout << "Debug: Found member " << username << " in CSV.\n";
             }
             else {
                 allMembers.push_back(line);
@@ -125,7 +124,6 @@ void Member::saveMemberDetails() {
         endDate + "," +
         workoutAssignedStr;
 
-    std::cout << "Debug: Updated member details: " << updatedMember << "\n";
 
     std::ofstream outFile("users.csv");
     if (!outFile.is_open()) {
@@ -140,7 +138,6 @@ void Member::saveMemberDetails() {
     outFile << updatedMember << std::endl;
 
     outFile.close();
-    std::cout << "Profile saved successfully! Debug: workoutAssigned = " << workoutAssignedStr << "\n";
 }
 
 // Update profile (Only editable fields)
@@ -198,13 +195,12 @@ void Member::viewDetails() {
 
     std::cout << "\n===== MEMBER DETAILS =====" << std::endl;
     std::cout << "Username: " << username << std::endl;
-    std::cout << "Password: " << password << std::endl;
     std::cout << "Role: " << role << std::endl;
     std::cout << "Name: " << name << std::endl;
     std::cout << "Age: " << age << std::endl;
     std::cout << "Gender: " << gender << std::endl;
-    std::cout << "Height: " << (height > 0 ? std::to_string(height) + " m" : "Not set") << std::endl;
-    std::cout << "Weight: " << (weight > 0 ? std::to_string(weight) + " kg" : "Not set") << std::endl;
+    std::cout << "Height: " << height << std::endl;
+    std::cout << "Weight: " << weight << std::endl;
     std::cout << "Diet Preference: " << (dietPreference.empty() ? "Not set" : dietPreference) << std::endl;
     std::cout << "Activity Level: " << (activityLevel.empty() ? "Not set" : activityLevel) << std::endl;
     std::cout << "Membership Type: " << membershipType << std::endl;

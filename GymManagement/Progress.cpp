@@ -1,60 +1,45 @@
 #include "Progress.h"
 #include <iostream>
-#include <fstream>
+#include <ctime>
+#include <iomanip>
 #include <sstream>
-#include <vector>
-#include "Member.h"
 
-void Member::saveProgress(const std::string& date, const std::string& progress) {
-    std::string filename = username + "_progress.csv";
-    std::ofstream outFile(filename, std::ios::app); // Open file in append mode
+// Define the static member outside the class in the implementation file
+std::unordered_map<std::string, std::vector<std::string>> Progress::progressEntries;
 
-    if (!outFile.is_open()) {
-        std::cerr << "Error: Could not open file " << filename << " for writing.\n";
-        return;
-    }
+void Progress::trackProgress(const std::string& username, double weight, double bmi, const std::string& achievement)
+{
+    // Get current timestamp
+    std::time_t now = std::time(nullptr);
+    std::tm tm;
+    localtime_s(&tm, &now);
+    std::stringstream timestamp;
+    timestamp << std::put_time(&tm, "%Y-%m-%d %H:%M:%S");
 
-    outFile << date << "," << progress << "\n";
-    outFile.close();
-    std::cout << "Progress saved successfully!\n";
-}
+    // Create a formatted progress entry
+    std::stringstream entry;
+    entry << "Timestamp: " << timestamp.str()
+        << " | Weight: " << weight << " kg"
+        << " | BMI: " << bmi
+        << " | Achievement: " << achievement;
 
-void Progress::trackProgress(const std::string& username, double weight, double bmi, const std::string& achievement) {
-    std::ofstream outFile(username + "_progress.csv", std::ios::app);
-    if (!outFile.is_open()) {
-        std::cerr << "Error: Could not open file for writing.\n";
-        return;
-    }
+    // Store the entry for the specific username
+    progressEntries[username].push_back(entry.str());
 
-    outFile << weight << "," << bmi << "," << achievement << "\n";
-    outFile.close();
     std::cout << "Progress tracked successfully!\n";
 }
 
 void Progress::viewProgress(const std::string& username) {
-    std::ifstream inFile(username + "_progress.csv");
-    if (!inFile.is_open()) {
-        std::cerr << "Error: Could not open file for reading.\n";
+    // Check if the user has any progress entries
+    auto it = progressEntries.find(username);
+    if (it == progressEntries.end() || it->second.empty()) {
+        std::cout << "No progress entries found for " << username << ".\n";
         return;
     }
 
-    std::string line;
-    std::cout << "\n===== PROGRESS =====\n";
-    while (std::getline(inFile, line)) {
-        std::istringstream ss(line);
-        double weight, bmi;
-        std::string achievement;
-        ss >> weight;
-        ss.ignore();
-        ss >> bmi;
-        ss.ignore();
-        std::getline(ss, achievement, ',');
-
-        std::cout << "Weight: " << weight << " kg\n";
-        std::cout << "BMI: " << bmi << "\n";
-        std::cout << "Achievement: " << achievement << "\n";
-        std::cout << "------------------------\n";
+    // Display progress entries for the username
+    std::cout << "\n--- Progress Tracking for " << username << " ---\n";
+    for (const auto& entry : it->second) {
+        std::cout << entry << "\n";
     }
-
-    inFile.close();
 }

@@ -4,6 +4,7 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
+#include "Trainer.h"
 
 void Workout::generateWorkoutPlan(const std::string& username) {
     // Read user details from users.csv
@@ -132,9 +133,9 @@ void Workout::generateWorkoutPlan(const std::string& username) {
     outFile.close();
     std::cout << "Workout plan generated successfully!\n";
 
+
     // Set workoutAssigned flag and save member details
     member.setWorkoutAssigned(true);
-    std::cout << "Debug: workoutAssigned set to true for " << username << "\n";
     member.saveMemberDetails();
 }
 
@@ -167,5 +168,6 @@ void Workout::viewWorkoutPlan(const std::string& username) {
     }
 
     inFile.close();
-    std::cout << "Debug: Finished reading workout plan for " << username << "\n";
+    Trainer trainer;
+    trainer.scheduleClass();
 }

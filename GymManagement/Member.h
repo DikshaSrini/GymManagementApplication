@@ -1,5 +1,4 @@
-#ifndef MEMBER_H
-#define MEMBER_H
+#pragma once
 
 #include <string>
 #include <vector> 
@@ -20,7 +19,7 @@ private:
     std::string membershipType;
     std::string startDate;
     std::string endDate;
-    bool workoutAssigned; // Add this flag
+    bool workoutAssigned; 
 
     std::string getCurrentDate();
     std::string calculateEndDate(const std::string& startDate);
@@ -41,12 +40,10 @@ public:
     void setWorkoutAssigned(bool assigned);
     bool isWorkoutAssigned() const;
 
-    void updateProgress();
-    void saveProgress(const std::string& date, double weight, const std::string& description) const;
-
     // Add these getters
     double getHeight() const { return height; }
     double getWeight() const { return weight; }
+
 
     void updateProfile();
     void viewDetails();
@@ -54,7 +51,6 @@ public:
     void saveMemberDetails();
 
     static std::vector<Member> loadAllMembers();
-    void saveProgress(const std::string& date, const std::string& progress);
+   
 };
 
-#endif
