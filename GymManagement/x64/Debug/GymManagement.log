@@ -1,2 +1,6 @@
-﻿  User.cpp
+﻿  Statistics.cpp
+  Trainer.cpp
+C:\Users\dks\source\repos\GymManagement\GymManagement\Statistics.cpp(8,22): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  Workout.cpp
+  Generating Code...
   GymManagement.vcxproj -> C:\Users\dks\source\repos\GymManagement\x64\Debug\GymManagement.exe

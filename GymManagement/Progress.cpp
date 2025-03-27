@@ -4,7 +4,6 @@
 #include <iomanip>
 #include <sstream>
 
-// Define the static member outside the class in the implementation file
 std::unordered_map<std::string, std::vector<std::string>> Progress::progressEntries;
 
 void Progress::trackProgress(const std::string& username, double weight, double bmi, const std::string& achievement)

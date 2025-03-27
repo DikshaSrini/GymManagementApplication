@@ -13,12 +13,14 @@
 #include "Payment.h"
 #include "Progress.h"
 
+// Function declarations
 void memberMenu(std::string username);
 void trainerMenu(std::string username);
 bool userExists(const std::string& username);
 std::string selectMembershipType();
 void adminMenu(std::vector<Member>& members);
 
+// Function to get hidden password input from the user
 std::string getHiddenPassword() {
     std::string password;
     char ch;
@@ -40,7 +42,6 @@ std::string getHiddenPassword() {
 }
 
 int main() {
-
     std::vector<Member> members;  // Declare members list
 
     std::cout << "***** Welcome to SynerGym *****\n\n";
@@ -59,7 +60,7 @@ int main() {
     else {
         if (username == "admin") {
             std::cout << "Enter Password: ";
-            std::string password = getHiddenPassword();;
+            std::string password = getHiddenPassword();
             if (password == "adminPass") {
                 std::cout << "Welcome back, Admin!\n";
                 userRole = ADMIN;
@@ -110,7 +111,6 @@ int main() {
             }
         }
     }
-
 
     if (userRole == ADMIN) adminMenu(members);
     else if (userRole == TRAINER) trainerMenu(user.getUsername());
@@ -179,7 +179,6 @@ void memberMenu(std::string username) {
             std::cout << "Membership End Date: " << member.getEndDate() << "\n";
         }
         else if (choice == 8) {
-   
             double weight, bmi;
             std::string achievement;
 
@@ -226,8 +225,9 @@ std::string selectMembershipType() {
     return membershipType;
 }
 
+// Function to display the trainer menu and handle trainer actions
 void trainerMenu(std::string username) {
-    Trainer trainer(username, "Strength Training");
+    Trainer trainer(username, "Strength Training"); // Create a Trainer object
     int choice;
     do {
         std::cout << "\nTrainer Menu:\n1. Assign Workout Plan\n2. Schedule Class\n3. Send Notifications\n4. Exit\nChoice: ";
@@ -237,14 +237,15 @@ void trainerMenu(std::string username) {
             std::string memberName;
             std::cout << "Enter Member Name: ";
             std::cin >> memberName;
-            Workout::generateWorkoutPlan(memberName);
+            Workout::generateWorkoutPlan(memberName); // Assign workout plan to member
             std::cout << "Workout plan assigned to " << memberName << " successfully!\n";
         }
-        else if (choice == 2) trainer.scheduleClass();
-        else if (choice == 3) trainer.sendNotification();
-    } while (choice != 4);
+        else if (choice == 2) trainer.scheduleClass(); // Schedule a class
+        else if (choice == 3) trainer.sendNotification(); // Send notifications
+    } while (choice != 4); // Exit the menu
 }
 
+// Function to display the admin menu and handle admin actions
 void adminMenu(std::vector<Member>& members) {
     int choice;
     do {
@@ -282,25 +283,25 @@ void adminMenu(std::vector<Member>& members) {
 
             // Append the new member to CSV
             outFile << username << ",defaultPass,MEMBER," << name << "," << age << "," << gender << ","
-                << height << "," << weight << "," << dietPreference << "," << activityLevel  << "\n";
+                << height << "," << weight << "," << dietPreference << "," << activityLevel << "\n";
 
             outFile.close();  // Save changes
             std::cout << "Member " << name << " added successfully!\n";
         }
         else if (choice == 2) {
-            std::vector<Member> members = Member::loadAllMembers();
-            Statistics::displayStats(members);
+            std::vector<Member> members = Member::loadAllMembers(); // Load all members
+            Statistics::displayStats(members); // Display statistics
         }
-    } while (choice != 3);
+    } while (choice != 3); // Exit the menu
 }
 
-
+// Function to check if a user exists in the CSV file
 bool userExists(const std::string& username) {
     std::ifstream file("users.csv");
     if (!file.is_open()) return false;
 
     std::string line;
-    std::getline(file, line);
+    std::getline(file, line); // Skip header line
 
     while (std::getline(file, line)) {
         std::istringstream ss(line);

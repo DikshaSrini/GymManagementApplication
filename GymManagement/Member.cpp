@@ -7,48 +7,57 @@
 #include <ctime>
 #include <iomanip> // Include this header for setfill and setw
 
-// Constructor
+// Constructor to initialize a Member object with given attributes
 Member::Member(std::string uname, std::string pwd, std::string r, std::string n, int a,
     std::string g, double h, double w, std::string dp, std::string al, std::string mType)
     : username(uname), password(pwd), role(r), name(n), age(a),
     gender(g), height(h), weight(w), dietPreference(dp),
     activityLevel(al), membershipType(mType), workoutAssigned(true) {
-    startDate = getCurrentDate();
-    endDate = calculateEndDate(startDate);
+    startDate = getCurrentDate(); // Set the start date to the current date
+    endDate = calculateEndDate(startDate); // Calculate the end date based on the start date
 }
 
+// Setter for membership type
 void Member::setMembershipType(const std::string& mType) {
     membershipType = mType;
 }
 
+// Getter for membership type
 std::string Member::getMembershipType() const {
     return membershipType;
 }
 
+// Setter for start date
 void Member::setStartDate(const std::string& start) {
     startDate = start;
 }
 
+// Getter for start date
 std::string Member::getStartDate() const {
     return startDate;
 }
 
+// Setter for end date
 void Member::setEndDate(const std::string& end) {
     endDate = end;
 }
 
+// Getter for end date
 std::string Member::getEndDate() const {
     return endDate;
 }
 
+// Setter for workout assigned status
 void Member::setWorkoutAssigned(bool assigned) {
     workoutAssigned = assigned;
 }
 
+// Getter for workout assigned status
 bool Member::isWorkoutAssigned() const {
     return workoutAssigned;
 }
 
+// Function to get the current date in YYYY-MM-DD format
 std::string Member::getCurrentDate() {
     std::time_t t = std::time(nullptr);
     std::tm now;
@@ -60,6 +69,7 @@ std::string Member::getCurrentDate() {
     return oss.str();
 }
 
+// Function to calculate the end date by adding 6 months to the start date
 std::string Member::calculateEndDate(const std::string& startDate) {
     std::tm tm = {};
     std::istringstream ss(startDate);
@@ -73,6 +83,7 @@ std::string Member::calculateEndDate(const std::string& startDate) {
     return oss.str();
 }
 
+// Function to save member details to a CSV file
 void Member::saveMemberDetails() {
     std::vector<std::string> allMembers;
     bool memberFound = false;
@@ -101,13 +112,7 @@ void Member::saveMemberDetails() {
         header = "Username,Password,Role,Name,Age,Gender,Height,Weight,DietPreference,ActivityLevel,MembershipType,StartDate,EndDate,WorkoutAssigned";
     }
 
-    std::string workoutAssignedStr;
-    if (workoutAssigned) {
-        workoutAssignedStr = "true";
-    }
-    else {
-        workoutAssignedStr = "false";
-    }
+    std::string workoutAssignedStr = workoutAssigned ? "true" : "false";
 
     std::string updatedMember = username + "," +
         password + "," +
@@ -124,7 +129,6 @@ void Member::saveMemberDetails() {
         endDate + "," +
         workoutAssignedStr;
 
-
     std::ofstream outFile("users.csv");
     if (!outFile.is_open()) {
         std::cout << "Error: Could not open file for writing.\n";
@@ -140,7 +144,7 @@ void Member::saveMemberDetails() {
     outFile.close();
 }
 
-// Update profile (Only editable fields)
+// Function to update profile details
 void Member::updateProfile() {
     int choice;
     bool continueUpdating = true;
@@ -190,6 +194,7 @@ void Member::updateProfile() {
     }
 }
 
+// Function to view member details
 void Member::viewDetails() {
     loadAllMembers();
 
@@ -209,6 +214,7 @@ void Member::viewDetails() {
     std::cout << "=========================" << std::endl;
 }
 
+// Function to load all members from the CSV file
 std::vector<Member> Member::loadAllMembers() {
     std::vector<Member> members;
     std::ifstream file("users.csv");

@@ -6,6 +6,7 @@
 #include <vector>
 #include "Trainer.h"
 
+// Function to generate a workout plan for a specific user
 void Workout::generateWorkoutPlan(const std::string& username) {
     // Read user details from users.csv
     std::ifstream inFile("users.csv");
@@ -21,6 +22,7 @@ void Workout::generateWorkoutPlan(const std::string& username) {
     bool userFound = false;
     Member member("", "", "", "", 0, "", 0.0, 0.0, "", "", "");
 
+    // Read each line from the file to find the user
     while (std::getline(inFile, line)) {
         std::istringstream ss(line);
         std::string uname, password, role, name, gender, membershipType, startDate, endDate;
@@ -44,6 +46,7 @@ void Workout::generateWorkoutPlan(const std::string& username) {
         std::getline(ss, startDate, ',');
         std::getline(ss, endDate, ',');
 
+        // Check if the current line matches the username
         if (uname == username) {
             userFound = true;
             member = Member(uname, password, role, name, age, gender, height, weight, dietPreference, activityLevel, membershipType);
@@ -66,6 +69,7 @@ void Workout::generateWorkoutPlan(const std::string& username) {
     std::vector<int> reps;
     std::vector<std::string> descriptions;
 
+    // Define workout plans based on activity level
     if (activityLevel == "Sedentary") {
         exercises = { "Walking", "Stretching" };
         sets = { 1, 1 };
@@ -119,6 +123,7 @@ void Workout::generateWorkoutPlan(const std::string& username) {
         };
     }
 
+    // Write the workout plan to a CSV file
     std::ofstream outFile(username + "_workout.csv");
     if (!outFile.is_open()) {
         std::cerr << "Error: Could not open file for writing.\n";
@@ -133,12 +138,12 @@ void Workout::generateWorkoutPlan(const std::string& username) {
     outFile.close();
     std::cout << "Workout plan generated successfully!\n";
 
-
     // Set workoutAssigned flag and save member details
     member.setWorkoutAssigned(true);
     member.saveMemberDetails();
 }
 
+// Function to view the workout plan for a specific user
 void Workout::viewWorkoutPlan(const std::string& username) {
     std::string filename = username + "_workout.csv";
     std::ifstream inFile(filename);
@@ -152,6 +157,7 @@ void Workout::viewWorkoutPlan(const std::string& username) {
     std::getline(inFile, line); // Skip header
 
     std::cout << "\n===== WORKOUT PLAN =====\n";
+    // Read and display each line of the workout plan
     while (std::getline(inFile, line)) {
         std::istringstream ss(line);
         std::string exercise, sets, reps, description;
