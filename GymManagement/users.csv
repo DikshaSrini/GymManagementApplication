@@ -1,4 +1,5 @@
 username,password,role,name,age,gender,height,weight,dietPreference,activityLevel,yearsOfExperience
 Rohit,rohit,MEMBER,Rohit,25,Male,1.83,70,Non-Vegetarian,Very Active,
-Diksha,diksha,MEMBER,Diksha,21,Female,1.65,55,Vegetarian,Lightly Active,
-Rashmi,diksha,MEMBER,Rashmi,22,Female,1.650000,55.000000,Vegan,Lightly Active,Platinum,2025-03-27,2025-09-27,true
+Rashmi,rashmi,MEMBER,Rashmi,22,Female,1.65,55,Vegan,Lightly Active,
+Diksha,diksha,MEMBER,Diksha,22,Female,1.650000,55.000000,Vegan,Lightly Active,Platinum,2025-03-27,2025-09-27,true
+Arham,defaultPass,MEMBER,Arham,22,Female,1.65,55,Vegan,Sedentary
